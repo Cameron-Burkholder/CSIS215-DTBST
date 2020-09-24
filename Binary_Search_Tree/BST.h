@@ -11,6 +11,9 @@
 // Include the dictionary ADT
 #include "dictionary.h"
 
+// Include iostream for testing
+#include <iostream>
+
 #ifndef BST_H
 #define BST_H
 
@@ -24,24 +27,116 @@ private:
   
   int nodecount;         // Number of nodes in the BST
 
+
+
+
+
+  /* CAMERON BURKHKOLDER */
+  // Insert a node into the BST
+  void inserthelp(BSTNode<Key, E>* root, const Key& k, const E& it) {
+      BSTNode<Key, E> *node = new BSTNode<Key, E>(k, it, NULL, NULL);
+      bool inserted = false;
+      if (root->left() == root && root->right() == root) {
+          node->setLeft(root);
+          node->setLeftBit(true);
+          node->setRight(root);
+          node->setRightBit(true);
+          root->setLeft(node);
+          root->setLeftBit(false);
+      }
+      else {
+          BSTNode<Key, E>* current = root->left();
+          while (!inserted) {
+              if (k < current->key()) {
+                  if (current->leftBit()) {
+                      node->setLeft(current->left());
+                      node->setLeftBit(true);
+                      node->setRight(current);
+                      node->setRightBit(true);
+                      current->setLeftBit(false);
+                      current->setLeft(node);
+                      inserted = true;
+                  }
+                  else {
+                      current = current->left();
+                  }
+              }
+              else {
+                  if (current->rightBit()) {
+                      node->setRight(current->right());
+                      node->setRightBit(true);
+                      node->setLeft(current);
+                      node->setLeftBit(true);
+                      current->setRightBit(false);
+                      current->setRight(node);
+                      inserted = true;
+                  }
+                  else {
+                      current = current->right();
+                  }
+              }
+          }
+      }
+  }
+
+  // Print out a BST
+
+  void printhelp(BSTNode<Key, E>* root, int level) const {
+      if (root->left() == root && root->right()) return;    // Empty tree
+
+      BSTNode<Key, E> current = root->left();
+      int depth = 0;
+      while (current->right() != root) {
+          depth++;
+          current = current->right();
+      }
+
+      if (!current->leftBit()) {
+          depth++;
+          current = current->left();
+      }
+
+  
+
+
+
+      /*
+      printhelp(root->left(), level + 1);   // Do left subtree
+      for (int i = 0; i < level; i++)         // Indent to level
+          cout << "  ";
+      cout << root->key() << "\n";        // Print node value
+      printhelp(root->right(), level + 1);  // Do right subtree
+      */
+  }
+
+
+
+
+
   // Private "helper" functions
   void clearhelp(BSTNode<Key, E>*);
-  BSTNode<Key,E>* inserthelp(BSTNode<Key, E>*,
-                              const Key&, const E&);
   BSTNode<Key,E>* deletemin(BSTNode<Key, E>*);
   BSTNode<Key,E>* getmin(BSTNode<Key, E>*);
   BSTNode<Key,E>* removehelp(BSTNode<Key, E>*, const Key&);
   E* findhelp(BSTNode<Key, E>*, const Key&) const;
-  void printhelp(BSTNode<Key, E>*, int) const;
   void vist(BSTNode<Key, E>*) const;
 
 public:
-  BST() { root = NULL; nodecount = 0; }  // Constructor
+  BST() { 
+      root = new BSTNode<Key, E>();
+      root->setLeftBit(true);
+      root->setRightBit(false);
+      root->setLeft(root);
+      root->setRight(root);
+  }  // Constructor
   
   //Note from Prof Sipantzi -- I've commented out the destructor
   //since you would have to change clearhelp() to make it work with
   //doubly-threaded trees and that is not part of the assignment.
   //~BST() { clearhelp(root); }            // Destructor
+  ~BST() {
+      delete root;
+  }
 
   void clear()   // Reinitialize tree
     { clearhelp(root); root = NULL; nodecount = 0; }
@@ -50,7 +145,7 @@ public:
   // k Key value of the record.
   // e The record to insert.
   void insert(const Key& k, const E& e) {
-    root = inserthelp(root, k, e);
+    inserthelp(root, k, e);
     nodecount++;
   }
 
@@ -89,7 +184,7 @@ public:
   int size() { return nodecount; }
 
   void print() const { // Print the contents of the BST
-    if (root == NULL) cout << "The BST is empty.\n";
+    if (root->left() == root && root->right() == root) cout << "The BST is empty.\n";
     else printhelp(root, 0);
   }
   
@@ -109,18 +204,6 @@ clearhelp(BSTNode<Key, E>* root) {
   clearhelp(root->left());
   clearhelp(root->right());
   delete root;
-}
-
-// Insert a node into the BST, returning the updated tree
-template <typename Key, typename E>
-BSTNode<Key, E>* BST<Key, E>::inserthelp(
-    BSTNode<Key, E>* root, const Key& k, const E& it) {
-  if (root == NULL)  // Empty tree: create node
-    return new BSTNode<Key, E>(k, it, NULL, NULL);
-  if (k < root->key())
-    root->setLeft(inserthelp(root->left(), k, it));
-  else root->setRight(inserthelp(root->right(), k, it));
-  return root;       // Return tree with node inserted
 }
 
 // Delete the minimum value from the BST, returning the revised BST
@@ -187,18 +270,6 @@ E* BST<Key, E>::findhelp(BSTNode<Key, E>* root,
       *temp = root->element();
       return temp;  // Found it
   }
-}
-
-// Print out a BST
-template <typename Key, typename E>
-void BST<Key, E>::
-printhelp(BSTNode<Key, E>* root, int level) const {
-  if (root == NULL) return;           // Empty tree
-  printhelp(root->left(), level+1);   // Do left subtree
-  for (int i=0; i<level; i++)         // Indent to level
-    cout << "  ";
-  cout << root->key() << "\n";        // Print node value
-  printhelp(root->right(), level+1);  // Do right subtree
 }
 
 #endif

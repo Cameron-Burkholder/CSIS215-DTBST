@@ -9,6 +9,8 @@
 #include "book.h"
 #include "BinNode.h"
 
+#include <iostream>
+
 #ifndef BSTNODE_H
 #define BSTNODE_H
 
@@ -20,8 +22,8 @@ private:
   E it;                   // The node's value
   BSTNode* lc;            // Pointer to left child
   BSTNode* rc;            // Pointer to right child
-  bool leftBit : 1;       // For both these variables, true will mean that it is a thread whereas false will mean
-  bool rightBit : 1;      // that it points to a node (not inorder thread)
+  bool leftBitField : 1;       // For both these variables, true will mean that it is a thread whereas false will mean
+  bool rightBitField : 1;      // that it points to a node (not inorder thread)
 
 public:
   // Two constructors -- with and without initial values
@@ -44,13 +46,13 @@ public:
 
   /* CAMERON BURKHOLDER */
   // Functions to get and set status of left and right thread bitfields 
-  inline int leftIsThread() const { return leftBit;  }
-  void setLeftBit(bool bit : 1) {
-      leftBit = bit;
+  inline int leftBit() const { return leftBitField; }
+  void setLeftBit(bool bit) {
+      leftBitField = bit;
   }
-  inline int rightIsThread() const { return rightBit; }
-  void setRightBit(bool bit : 1) {
-      rightBit = bit;
+  inline int rightBit() const { return rightBitField; }
+  void setRightBit(bool bit) {
+      rightBitField = bit;
   }
 
   // Return true if it is a leaf, false otherwise
