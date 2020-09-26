@@ -32,6 +32,37 @@ private:
 
 
   /* CAMERON BURKHKOLDER */
+  // Print spaces for node to show depth
+  void printspaces(int spaces) const {
+      for (int i = 0; i < spaces; i++) {
+          std::cout << "  ";
+      }
+  }
+  // Get depth of an element in the tree
+  int getDepth(BSTNode<Key, E>* target) const {
+      int depth = 0;
+      BSTNode<Key, E>* current = root->left();
+      bool isFound = false;
+      // while we have not reached the outer leaves of the tree
+      // and we are not going up threads
+      while (current != root && !isFound) {
+          // we have found element
+          if (target == current) {
+              isFound = true;
+          }
+          else {
+              depth++;
+              if (target->key() < current->key()) {
+                  current = current->left();
+              }
+              else {
+                  current = current->right();
+              }
+          }
+      }
+
+      return depth;
+  }
   // Insert a node into the BST
   void inserthelp(BSTNode<Key, E>* root, const Key& k, const E& it) {
       BSTNode<Key, E> *node = new BSTNode<Key, E>(k, it, NULL, NULL);
@@ -78,36 +109,81 @@ private:
           }
       }
   }
-
+  // Get the inorder successor
+  BSTNode<Key, E>* inorderSuccessor(BSTNode<Key, E>* current) const {
+      // If right pointer is a thread, return that value
+      if (current->rightBit()) {
+          return current->right();
+      }
+      // Else traverse the next subtree to find the left-most element
+      else {
+          current = current->right();
+          while (!current->leftBit()) {
+              current = current->left();
+          }
+          return current;
+      }
+  }
+  // Get the inorder successor
+  BSTNode<Key, E>* inorderPredecessor(BSTNode<Key, E>* current) const {
+      if (current->leftBit()) {
+          return current->left();
+      }
+      else {
+          current = current->left();
+          while (!current->rightBit()) {
+              current = current->right();
+          }
+          return current;
+      }
+  }
   // Print out a BST
-
   void printhelp(BSTNode<Key, E>* root, int level) const {
       if (root->left() == root && root->right()) return;    // Empty tree
 
-      BSTNode<Key, E> current = root->left();
-      int depth = 0;
-      while (current->right() != root) {
-          depth++;
-          current = current->right();
-      }
-
-      if (!current->leftBit()) {
-          depth++;
+      BSTNode<Key, E>* current = root->left();
+      while (!current->leftBit()) {
           current = current->left();
       }
 
-  
+      while (current != root) {
+          int depth = getDepth(current);
+          printspaces(depth);
+          std::cout << current->key() << std::endl;
+          current = inorderSuccessor(current);
+      }
 
-
-
-      /*
-      printhelp(root->left(), level + 1);   // Do left subtree
-      for (int i = 0; i < level; i++)         // Indent to level
-          cout << "  ";
-      cout << root->key() << "\n";        // Print node value
-      printhelp(root->right(), level + 1);  // Do right subtree
-      */
   }
+  // Print the BST inorder 
+  void printinorderhelp(BSTNode<Key, E>* root, int level) const {
+      if (root->left() == root && root->right()) return;    // Empty tree
+
+      BSTNode<Key, E>* current = root->left();
+
+      while (!current->leftBit()) {
+          current = current->left();
+      }
+
+      while (current != root) {
+          std::cout << current->element() << std::endl;
+          current = inorderSuccessor(current);
+      }
+  }
+  // Print the BST in reverse order
+  void printreversehelp(BSTNode<Key, E>* root, int level) const {
+      if (root->left() == root && root->right()) return;    // Empty tree
+
+      BSTNode<Key, E>* current = root->left();
+      while (!current->rightBit()) {
+          current = current->right();
+      }
+
+      while (current != root) {
+          std::cout << current->element() << std::endl;
+          current = inorderPredecessor(current);
+      }
+  }
+  
 
 
 
@@ -137,6 +213,20 @@ public:
   ~BST() {
       delete root;
   }
+
+
+
+  // CAMERON BURKHOLDER 
+  void printInorder() {
+      if (root->left() == root && root->right() == root) cout << "The BST is empty.\n";
+      else printinorderhelp(root, 0);
+  }
+  void printReverse() {
+      if (root->left() == root && root->right() == root) cout << "The BST is empty.\n";
+      else printreversehelp(root, 0);
+  }
+
+
 
   void clear()   // Reinitialize tree
     { clearhelp(root); root = NULL; nodecount = 0; }

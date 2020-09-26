@@ -15,9 +15,24 @@ int main()
 
     BST<int, std::string>* dictionary = new BST<int, std::string>();
 
+    std::cout << "Testing the insert function to build the tree." << std::endl;
     for (int i = 0; i < NUM_INPUTS; i++) {
         dictionary->insert(INT_INPUT[i], STRING_INPUT[i]);
     }
+
+    std::cout << "The size of the tree is " << dictionary->size() << std::endl << std::endl;
+
+    std::cout << "The structure of the tree is: " << std::endl;
+    dictionary->print();
+    std::cout << std::endl;
+
+    std::cout << "Inorder printing of the tree" << std::endl;
+    dictionary->printInorder();
+    std::cout << std::endl;
+
+    std::cout << "Reverse order printing of the tree" << std::endl;
+    dictionary->printReverse();
+    std::cout << std::endl;
 
     system("pause");
     return 0;
