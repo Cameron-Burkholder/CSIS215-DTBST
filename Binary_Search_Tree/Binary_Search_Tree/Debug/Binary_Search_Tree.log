@@ -1,4 +1,5 @@
 ﻿  main.cpp
 C:\Users\cburk\OneDrive - Liberty University\CSIS 215\Programming_Assignment_2_Binary_Search_Tree\Binary_Search_Tree\book.h(74,1): warning C4005: 'INFINITY': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_math.h(90): message : see previous definition of 'INFINITY'
+  LINK : C:\Users\cburk\OneDrive - Liberty University\CSIS 215\Programming_Assignment_2_Binary_Search_Tree\Binary_Search_Tree\Debug\Binary_Search_Tree.exe not found or not built by the last incremental link; performing full link
   Binary_Search_Tree.vcxproj -> C:\Users\cburk\OneDrive - Liberty University\CSIS 215\Programming_Assignment_2_Binary_Search_Tree\Binary_Search_Tree\Debug\Binary_Search_Tree.exe
